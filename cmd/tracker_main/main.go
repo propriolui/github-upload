@@ -44,11 +44,11 @@ func run() {
 	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"*"}))
 
 	//crea repositories
-	accRepo := repositories.NewAccountRepo(clientDB)
+	accRepo := repositories.NewAccountRepo(clientDB, sugar)
 
-	a := controllers.NewAccount(accRepo)
+	a := controllers.NewAccount(accRepo, sugar)
 
-	r := customRouter()
+	r := mux.NewRouter()
 
 	// crea un nuovo server
 	s := http.Server{
@@ -69,6 +69,9 @@ func run() {
 		}
 	}()
 
+	//routing
+	r.HandleFunc("/login", a.Login).Methods("POST")
+
 	// spegnimento dolce server
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
@@ -82,10 +85,4 @@ func run() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	s.Shutdown(ctx)
-}
-
-func customRouter() *mux.Router {
-	r := mux.NewRouter()
-
-	return r
 }

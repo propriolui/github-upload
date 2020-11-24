@@ -24,7 +24,7 @@ func NewDB(s *zap.SugaredLogger) *Mongodb {
 func (mdb *Mongodb) ConnectDB() (*mongo.Client, context.Context) {
 
 	//apre una nuova connessione col db
-	clientDB, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://tracking-web-app:6OW0KwrITghWTYJW@gabryelcluster.xdyuo.mongodb.net/tracker-db?retryWrites=true&w=majority"))
+	clientDB, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://tracking-web-app:6OW0KwrITghWTYJW@gabryelcluster.xdyuo.mongodb.net/tracker_db?retryWrites=true&w=majority"))
 	if err != nil {
 		mdb.s.Error(err)
 	}
