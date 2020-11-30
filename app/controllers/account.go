@@ -1,9 +1,11 @@
 package controllers
 
 import (
-	"io/ioutil"
+	"encoding/json"
 	"net/http"
 	"propriolui/tracker_api/app/models"
+
+	"github.com/golang/gddo/httputil/header"
 
 	"go.uber.org/zap"
 )
@@ -14,6 +16,11 @@ type Accounts struct {
 	s       *zap.SugaredLogger
 }
 
+type Test struct {
+	Email    string `bson:"email"`
+	Password string `bson:"password"`
+}
+
 //NewAccount : crea un nuovo oggetto account
 func NewAccount(accRepo models.AccountRepository, s *zap.SugaredLogger) *Accounts {
 	return &Accounts{accRepo, s}
@@ -21,13 +28,31 @@ func NewAccount(accRepo models.AccountRepository, s *zap.SugaredLogger) *Account
 
 //Login : permette di ricavare informazioni sull'account
 func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
-	//legge il body, successivamente lo converte e lo passa al
-	bodyBytes, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.s.Fatal(err)
-	}
 
-	bodyString := string(bodyBytes)
-	result := a.accRepo.FindAccount(bodyString)
-	a.s.Info(result)
+	if r.Header.Get("Content-Type") != "" {
+		value, _ := header.ParseValueAndParams(r.Header, "Content-Type")
+		if value != "application/json" {
+			msg := "Content-Type header is not application/json"
+			http.Error(w, msg, http.StatusUnsupportedMediaType)
+			return
+		}
+	}
+	//legge il body, successivamente lo converte e lo passa al
+	decoder := json.NewDecoder(r.Body)
+	var t Test
+	err := decoder.Decode(&t)
+	if err != nil {
+		panic(err)
+	}
+	a.s.Info(t)
+	result := a.accRepo.FindAccount(t.Email)
+	if result.AccountID == "" {
+		http.Error(w, "account not exist", http.StatusNotFound)
+	} else {
+		if result.Password == t.Password {
+			w.Header().Add("password", "correct")
+		} else {
+			http.Error(w, "password not matching", http.StatusNotAcceptable)
+		}
+	}
 }

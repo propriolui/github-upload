@@ -28,7 +28,11 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
-		acc.s.Fatal(err)
+		if err == mongo.ErrNoDocuments {
+			acc.s.Infof("documento vuoto")
+		} else {
+			acc.s.Panic(err)
+		}
 	}
 	acc.s.Info(result)
 	return result
