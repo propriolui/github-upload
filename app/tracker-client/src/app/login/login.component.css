@@ -1,0 +1,46 @@
+.login-background {
+    background-image: url("../../assets/tony-pham-TV7m_tpmqhw-unsplash.jpg");
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-size: cover;
+}
+
+.over-bg{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #00000015;
+}
+
+.login-container {
+    position: absolute;
+    top: 50px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    border-radius: 20px;
+    background-color: #ffffffee;
+    border: 3px solid #4caf50;
+    box-shadow: 5px 5px 5px;
+}
+
+.title-app {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    font-size: xx-large;
+}
+
+.login-input {
+    width: 80%;
+}
+
+.login-text {
+    margin-top: 150px;
+    margin-bottom: 20px;
+    font-size: x-large;
+}

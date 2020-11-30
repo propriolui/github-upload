@@ -1,0 +1,41 @@
+<div class="login-background">
+    <span class="over-bg"></span>
+</div>
+<div class="container col-md-4 login-container">
+    <div class="d-flex justify-content-center title-app">Nome app</div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <p class="d-flex justify-content-center">
+            <mat-form-field appearance="outline" class="login-input">
+            <mat-label>Username</mat-label>
+            <input 
+            matInput
+            required
+            placeholder="nome@email.dominio" 
+            [formControl]="email"  
+            type="email"
+            name="username">
+            <mat-icon matSuffix style="margin-right: 5px;">account_circle</mat-icon>  
+            <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
+            </mat-form-field>
+        </p>
+        <p class="d-flex justify-content-center">
+            <mat-form-field appearance="outline" class="login-input">
+            <mat-label>Password</mat-label>
+            <input 
+            matInput 
+            required
+            [minlength] = "minLength"
+            [type]="hide ? 'password' : 'text'"
+            [formControl]="pwd" 
+            name="pwd">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="pwd.invalid">{{getPwdError()}}</mat-error>
+            </mat-form-field>
+        </p>
+        <p class="d-flex justify-content-center">
+            <button mat-raised-button color="primary" type="submit">Login</button>
+        </p>
+    </form>
+</div>
