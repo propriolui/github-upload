@@ -8,42 +8,45 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  form:FormGroup;
   minLength = 8;
   hide = true;
+  email = new FormControl('', [Validators.required, Validators.email]);
+  pwd = new FormControl('', [Validators.required, Validators.minLength(this.minLength)]);
 
+  form = new FormGroup({
+    email: this.email,
+    pwd: this.pwd
+  })
+ 
 
-  constructor(private fb:FormBuilder,
+  constructor(
               //private authService: AuthService,
-              private router: Router) {
+              private router: Router) {}
 
-                this.form = this.fb.group({
-                  email: ['', Validators.required, Validators.email],
-                  pwd: ['', Validators.required, Validators.minLength(this.minLength)]
-                })
-              }
+  ngOnInit(): void{
+  }            
 
-  
-  getEmailError() {
-    if (this.form.hasError('required')) {
-      return 'Questo campo è obbligatorio';
+  getEmailError(){
+    if (this.form.controls["email"].hasError("required")){
+      return "Campo richiesto";
     }
 
-
-    return this.form.hasError('email') ? 'Formato non valido' : '';
-  }
-
-  getPwdError() {
-    if (this.form.hasError('required')) {
-      return 'Questo campo è obbligatorio';
+    if (this.form.controls["email"].hasError("email")){
+      return "Formato non valido";
     }
-
-    if (this.form.hasError('minlength')) {
-      return 'Lunghezza minima '+this.minLength+' caratteri'
-    }
-
     return
   }
+
+  getPwdError(){
+    if (this.form.controls["pwd"].hasError("required")){
+      return "Campo richiesto";
+    }
+    if (this.form.controls["pwd"].hasError("minlength")){
+      return "Lunghezza minima "+ this.minLength + " caratteri";
+    }
+    return
+  }
+
 
   onSubmit(){
     const val = this.form.value;
@@ -57,9 +60,6 @@ export class LoginComponent implements OnInit {
     //       }
     //     )
     // }
-  }
-
-  ngOnInit(): void {
   }
 
 }

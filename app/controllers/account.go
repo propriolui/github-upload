@@ -6,6 +6,7 @@ import (
 	"propriolui/tracker_api/app/models"
 
 	"github.com/golang/gddo/httputil/header"
+	"golang.org/x/crypto/bcrypt"
 
 	"go.uber.org/zap"
 )
@@ -42,17 +43,25 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 	var l login
 	err := decoder.Decode(&l)
 	if err != nil {
-		panic(err)
+		a.s.Panic(err)
 	}
-	a.s.Info(l)
+
+	//recupera l'account associato all'indirizzo mail
 	result := a.accRepo.FindAccount(l.Email)
+
+	//se non esiste l'account esce altrimenti controlla la password
 	if result.AccountID == "" {
 		http.Error(w, "account not exist", http.StatusNotFound)
 	} else {
-		if result.Password == l.Password {
-			w.Header().Add("password", "correct")
+		pwdRequest := []byte(l.Password)
+		pwd := []byte(result.Password)
+
+		// Comparing the password with the hash
+		err = bcrypt.CompareHashAndPassword(pwd, pwdRequest)
+		if err != nil {
+			w.Header().Add("password", "incorrect")
 		} else {
-			http.Error(w, "password not matching", http.StatusNotAcceptable)
+			w.Header().Add("password", "correct")
 		}
 	}
 }

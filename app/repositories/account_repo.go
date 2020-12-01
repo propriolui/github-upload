@@ -34,7 +34,6 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 			acc.s.Panic(err)
 		}
 	}
-	acc.s.Info(result)
 	return result
 }
 
