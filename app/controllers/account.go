@@ -16,7 +16,7 @@ type Accounts struct {
 	s       *zap.SugaredLogger
 }
 
-type Test struct {
+type login struct {
 	Email    string `bson:"email"`
 	Password string `bson:"password"`
 }
@@ -39,17 +39,17 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	//legge il body, successivamente lo converte e lo passa al
 	decoder := json.NewDecoder(r.Body)
-	var t Test
-	err := decoder.Decode(&t)
+	var l login
+	err := decoder.Decode(&l)
 	if err != nil {
 		panic(err)
 	}
-	a.s.Info(t)
-	result := a.accRepo.FindAccount(t.Email)
+	a.s.Info(l)
+	result := a.accRepo.FindAccount(l.Email)
 	if result.AccountID == "" {
 		http.Error(w, "account not exist", http.StatusNotFound)
 	} else {
-		if result.Password == t.Password {
+		if result.Password == l.Password {
 			w.Header().Add("password", "correct")
 		} else {
 			http.Error(w, "password not matching", http.StatusNotAcceptable)

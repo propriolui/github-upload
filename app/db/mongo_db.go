@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"io/ioutil"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,9 +23,14 @@ func NewDB(s *zap.SugaredLogger) *Mongodb {
 
 //ConnectDB : apre la connessione con il db mongo
 func (mdb *Mongodb) ConnectDB() (*mongo.Client, context.Context) {
-
+	//recupero la password dal file
+	data, err := ioutil.ReadFile("../../passwordMongo.txt")
+	if err != nil {
+		mdb.s.DPanic(err)
+	}
+	mongoURI := string(data)
 	//apre una nuova connessione col db
-	clientDB, err := mongo.NewClient(options.Client().ApplyURI("mongo.uri"))
+	clientDB, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		mdb.s.Error(err)
 	}
