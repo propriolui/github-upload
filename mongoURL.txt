@@ -1,0 +1,1 @@
+mongodb+srv://tracking-web-app:6OW0KwrITghWTYJW@gabryelcluster.xdyuo.mongodb.net/tracker_db?retryWrites=true&w=majority
