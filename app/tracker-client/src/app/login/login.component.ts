@@ -49,7 +49,9 @@ export class LoginComponent implements OnInit {
 
   onSubmit(){
     const val = this.form.value    
-    
+    if(!this.email.valid || !this.pwd.valid){
+      return
+    }
     if(val.email && val.pwd) {
 
       this.login.login(val.email, val.pwd);

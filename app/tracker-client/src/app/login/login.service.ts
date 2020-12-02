@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpHeaders } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -18,7 +19,7 @@ export class LoginService {
 
  
 
-  response!: Observable<any>;
+  response: Subscription | undefined;
 
   constructor(private http: HttpClient) { }
   
@@ -27,6 +28,7 @@ export class LoginService {
     var credentials = JSON.stringify({email: email, password: pwd});
     const headers = { 'content-type': 'application/json'}  
     console.log(credentials);
-    return this.http.post('http://localhost:8080/login', credentials, httpOptions).subscribe(x => console.log(x));
+    this.response = this.http.post('http://localhost:8080/login', credentials, httpOptions).subscribe(x => console.log(x));
+    console.log(this.response)
   }
 }
