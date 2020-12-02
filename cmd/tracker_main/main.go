@@ -10,7 +10,8 @@ import (
 	"propriolui/tracker_api/app/repositories"
 	"time"
 
-	gohandlers "github.com/gorilla/handlers"
+	"github.com/rs/cors"
+
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 )
@@ -41,7 +42,10 @@ func run() {
 	defer dbmongo.Disconnect(ctx, clientDB)
 
 	// CORS
-	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"*"}))
+	ch := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:4200"},
+		AllowCredentials: true,
+	})
 
 	//crea repositories
 	accRepo := repositories.NewAccountRepo(clientDB, sugar)
@@ -50,10 +54,12 @@ func run() {
 
 	r := mux.NewRouter()
 
+	handler := ch.Handler(r)
+
 	// crea un nuovo server
 	s := http.Server{
 		Addr:         "0.0.0.0:8080",
-		Handler:      ch(r),             // set the default handler
+		Handler:      handler,           // set the default handler
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
 		IdleTimeout:  120 * time.Second, // max time for connections using TCP Keep-Alive

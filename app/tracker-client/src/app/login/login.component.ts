@@ -1,6 +1,7 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -19,9 +20,7 @@ export class LoginComponent implements OnInit {
   })
  
 
-  constructor(
-              //private authService: AuthService,
-              private router: Router) {}
+  constructor(private login: LoginService, private router: Router) {}
 
   ngOnInit(): void{
   }            
@@ -49,17 +48,13 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit(){
-    const val = this.form.value;
+    const val = this.form.value    
+    
+    if(val.email && val.pwd) {
 
-    // if(val.email && val.pwd) {
-    //   this.authService.login(val.email, val.password)
-    //     .subscribe(
-    //       () => {
-    //         console.log("User is logged in");
-    //         this.router.navigateByUrl('/');
-    //       }
-    //     )
-    // }
+      this.login.login(val.email, val.pwd);
+      
+    }
   }
 
 }

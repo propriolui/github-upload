@@ -45,7 +45,7 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		a.s.Panic(err)
 	}
-
+	a.s.Info(l)
 	//recupera l'account associato all'indirizzo mail
 	result := a.accRepo.FindAccount(l.Email)
 
@@ -53,6 +53,7 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 	if result.AccountID == "" {
 		http.Error(w, "account not exist", http.StatusNotFound)
 	} else {
+		a.s.Info(l.Password)
 		pwdRequest := []byte(l.Password)
 		pwd := []byte(result.Password)
 
