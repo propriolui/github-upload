@@ -1,6 +1,7 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { LoginService } from './login.service';
 
 @Component({
@@ -53,10 +54,16 @@ export class LoginComponent implements OnInit {
       return
     }
     if(val.email && val.pwd) {
+      const val = this.form.value    
+    if(!this.email.valid || !this.pwd.valid){
+      return
+    }
+    if(val.email && val.pwd) {
 
       this.login.login(val.email, val.pwd);
       
     }
+  }
   }
 
 }

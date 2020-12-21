@@ -38,14 +38,14 @@ type Account struct {
 type AccountSettings struct {
 	NotifyEmail      string `bson:"notifyEmail"`
 	AllowNotify      bool   `bson:"allowNotify"`
-	SpeedUnits       int8   `bson:"speedUnits"`
-	DistanceUnits    int8   `bson:"distanceUnits"`
-	VolumeUnits      int8   `bson:"volumeUnits"`
-	PressureUnits    int8   `bson:"pressureUnits"`
-	TemperatureUnits int8   `bson:"temperatureUnits"`
-	CurrencyUnits    int8   `bson:"currencyUnits"`
-	LatLonFormat     int8   `bson:"latLonFormat"`
-	GeocoderMode     int8   `bson:"geocoderMode"`
+	SpeedUnits       int    `bson:"speedUnits"`
+	DistanceUnits    int    `bson:"distanceUnits"`
+	VolumeUnits      int    `bson:"volumeUnits"`
+	PressureUnits    int    `bson:"pressureUnits"`
+	TemperatureUnits int    `bson:"temperatureUnits"`
+	CurrencyUnits    int    `bson:"currencyUnits"`
+	LatLonFormat     int    `bson:"latLonFormat"`
+	GeocoderMode     int    `bson:"geocoderMode"`
 	Timezone         string `bson:"timezone"`
 	PreferDataFormat string `bson:"preferDataFormat"`
 	PreferTimeFormat string `bson:"preferTimeFormat"`
@@ -57,7 +57,6 @@ type AccountInfo struct {
 	SMTPProperties string `bson:"smtpProperties,omitempty"`
 	ContactName    string `bson:"contactName"`
 	ContactPhone   string `bson:"contactPhone"`
-	ContactEmail   string `bson:"contactEmail"`
 	DisplayName    string `bson:"displayName,omitempty"`
 }
 

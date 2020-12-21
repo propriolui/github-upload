@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"propriolui/tracker_api/app/models"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -39,6 +40,13 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 
 //AddAccount : ritorna un account in base all'accountID
 func (acc *AccountRepo) AddAccount(account *models.Account) {
+	collection := acc.dba.Database("tracker_db").Collection("account")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	insertResult, err := collection.InsertOne(ctx, account)
+	if err != nil {
+		acc.s.Panicf("error insert in db")
+	}
+	acc.s.Info("inserito nel db: ", insertResult.InsertedID)
 	return
 }
 
