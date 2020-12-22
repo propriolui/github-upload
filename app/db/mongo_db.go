@@ -2,9 +2,10 @@ package db
 
 import (
 	"context"
-	"io/ioutil"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -24,11 +25,16 @@ func NewDB(s *zap.SugaredLogger) *Mongodb {
 //ConnectDB : apre la connessione con il db mongo
 func (mdb *Mongodb) ConnectDB() (*mongo.Client, context.Context) {
 	//recupero la password dal file
-	data, err := ioutil.ReadFile("../../passwordMongo.txt")
+	//data, err := ioutil.ReadFile("../../passwordMongo.txt")
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		mdb.s.Fatalf("Error loading env file")
+	}
+	data := os.Getenv("DB_URL")
 	if err != nil {
 		mdb.s.DPanic(err)
 	}
-	mongoURI := string(data)
+	mongoURI := data
 	//apre una nuova connessione col db
 	clientDB, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 	if err != nil {

@@ -159,6 +159,14 @@ func (a *Accounts) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	a.accRepo.AddAccount(acc)
 }
 
+//UpdateAccount : api di modifica di un documento della tabella account
 func (a *Accounts) UpdateAccount(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 
+	var err error
+
+	acc := &models.Account{}
+	acc.Info = &models.AccountInfo{}
+	acc.Settings = &models.AccountSettings{}
+	a.s.Info(err)
 }
