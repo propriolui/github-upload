@@ -77,7 +77,8 @@ func run() {
 
 	//routing
 	r.HandleFunc("/login", a.Login).Methods("POST")
-	r.HandleFunc("/addAccount", a.CreateAccount).Methods("POST")
+	r.HandleFunc("/account", a.CreateAccount).Methods("POST")
+	r.HandleFunc("/account", a.UpdateAccount).Methods("PUT")
 
 	// spegnimento dolce server
 	c := make(chan os.Signal, 1)

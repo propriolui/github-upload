@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 )
@@ -38,10 +39,11 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 	return result
 }
 
-//AddAccount : ritorna un account in base all'accountID
+//AddAccount : inserisce un account nel db
 func (acc *AccountRepo) AddAccount(account *models.Account) {
 	collection := acc.dba.Database("tracker_db").Collection("account")
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	account.CreationTime = primitive.Timestamp{}
 	insertResult, err := collection.InsertOne(ctx, account)
 	if err != nil {
 		acc.s.Panicf("error insert in db")
@@ -52,5 +54,12 @@ func (acc *AccountRepo) AddAccount(account *models.Account) {
 
 //UpdateAccount : ritorna un account in base all'accountID
 func (acc *AccountRepo) UpdateAccount(account *models.Account) {
-	return
+	collection := acc.dba.Database("tracker_db").Collection("account")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	account.LastUpdateTime = primitive.Timestamp{}
+	result, err := collection.ReplaceOne(ctx, bson.M{"accountID": account.AccountID}, account)
+	if err != nil {
+		acc.s.DPanic(err)
+	}
+	acc.s.Info("Modificato: ", result.ModifiedCount)
 }

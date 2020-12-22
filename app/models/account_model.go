@@ -64,5 +64,5 @@ type AccountInfo struct {
 type AccountRepository interface {
 	FindAccount(AccountID string) *Account
 	AddAccount(account *Account)
-	UpdateAccount(account *Account)
+	UpdateAccount(accoount *Account)
 }
