@@ -62,7 +62,38 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("password", "incorrect")
 		} else {
 			w.Header().Add("password", "correct")
+			token, err := middlewares.GenerateJWT(2)
+			if err != nil {
+				a.s.Panicf("Error generating JWT: ", err)
+			}
+			w.Header().Add("token", token)
 		}
+	}
+}
+
+//GetAccount : permette di recuperare informazioni dell'account
+func (a *Accounts) GetAccount(w http.ResponseWriter, r *http.Request) {
+	msg := "Content-Type header is not application/json"
+	err := middlewares.ValContentType(r)
+	if err != nil {
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+	//legge il body, successivamente lo converte e lo passa al repo
+	decoder := json.NewDecoder(r.Body)
+	l := &models.Account{}
+	err = decoder.Decode(&l)
+	if err != nil {
+		a.s.Panic(err)
+	}
+	a.s.Info(l)
+	//recupera l'account associato all'indirizzo mail
+	result := a.accRepo.FindAccount(l.AccountID)
+	result.Password = ""
+	if result.AccountID == "" {
+		http.Error(w, "account not exist", http.StatusNotFound)
+	} else {
+		json.NewEncoder(w).Encode(result)
 	}
 }
 

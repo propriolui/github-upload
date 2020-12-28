@@ -40,7 +40,7 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 }
 
 //AddAccount : inserisce un account nel db
-func (acc *AccountRepo) AddAccount(account *models.Account) {
+func (acc *AccountRepo) AddAccount(account *models.Account) interface{} {
 	collection := acc.dba.Database("tracker_db").Collection("account")
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	account.CreationTime = primitive.Timestamp{}
@@ -49,7 +49,7 @@ func (acc *AccountRepo) AddAccount(account *models.Account) {
 		acc.s.Panicf("error insert in db")
 	}
 	acc.s.Info("inserito nel db: ", insertResult.InsertedID)
-	return
+	return insertResult.InsertedID
 }
 
 //UpdateAccount : ritorna un account in base all'accountID

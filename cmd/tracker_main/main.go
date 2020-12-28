@@ -77,6 +77,7 @@ func run() {
 
 	//routing
 	r.HandleFunc("/login", a.Login).Methods("POST")
+	r.HandleFunc("/account", a.GetAccount).Methods("GET")
 	r.HandleFunc("/account", a.CreateAccount).Methods("POST")
 	r.HandleFunc("/account", a.UpdateAccount).Methods("PUT")
 
