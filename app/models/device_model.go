@@ -1,43 +1,46 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 //Device : collezione device
 type Device struct {
-	AccountID          string  `bson:"accountID"`
-	DeviceID           string  `bson:"deviceID"`
-	GroupID            string  `bson:"groupID"`
-	EquipmentType      string  `bson:"equipmentType,omitempty"`
-	EquipmentStatus    string  `bson:"equipmentStatus,omitempty"`
-	SpeedLimitKMH      float32 `bson:"speedLimitKMH,omitempty"`
-	SpeedOffsetKMH     float32 `bson:"speedOffsetKMH,omitempty"`
-	PlanDistanceKM     float32 `bson:"planDistanceKM,omitempty"`
-	InstallTime        uint32  `bson:"installTime,omitempty"`
-	ResetTime          uint32  `bson:"resetTime,omitempty"`
-	ExpirationTime     uint32  `bson:"expirationTime,omitempty"`
-	DeviceCode         string  `bson:"deviceCode,omitempty"`
-	IconURL            string  `bson:"iconURL,omitempty"`
-	SerialNumber       string  `bson:"serialNumber"`
-	SimPhoneNumber     string  `bson:"simPhoneNumber"`
-	SimID              string  `bson:"simID,omitempty"`
-	ImeiNumber         string  `bson:"imeiNumber,omitempty"`
-	RouteColor         string  `bson:"routeColor,omitempty"`
-	IgnitionIndex      uint8   `bson:"ignitionIndex,omitempty"`
-	CodeVersion        string  `bson:"codeVersion,omitempty"`
-	FeatureSet         string  `bson:"featureSet,omitempty"`
-	IPAddressValid     string  `bson:"ipAddressValid"`
-	FirstConnectTime   uint32  `bson:"firstConnectTime"`
-	LastRevGeocodeTime uint32  `bson:"lastReverseGeocodeTime,omitempty"`
-	CommandStateMask   uint32  `bson:"commandStateMask,omitempty"`
-	StatusCodeState    uint32  `bson:"statusCodeState"` //on\off state
-	OdometerOffsetKM   float32 `bson:"odometerOffsetKM,omitempty"`
-	LastStopTime       uint32  `bson:"lastStopTime,omitempty"`
-	LastStartTime      uint32  `bson:"lastStartTime,omitempty"`
-	RegistrationTime   uint32  `bson:"registrationTime"`
-	DeletedTime        uint32  `bson:"deletedTime"`
-	IsActive           bool    `bson:"isActive"`
-	DisplayName        string  `bson:"displayName"`
-	Notes              string  `bson:"notes,omitempty"`
-	LastUpdateTime     uint32  `bson:"lastUpdateTime"`
-	CreationTime       uint32  `bson:"creationTime"`
+	ID                 primitive.ObjectID `bson:"_id, omitempty"`
+	AccountID          string             `bson:"accountID"`
+	DeviceID           string             `bson:"deviceID"`
+	GroupID            string             `bson:"groupID"`
+	EquipmentType      string             `bson:"equipmentType,omitempty"`
+	EquipmentStatus    string             `bson:"equipmentStatus,omitempty"`
+	SpeedLimitKMH      float32            `bson:"speedLimitKMH,omitempty"`
+	SpeedOffsetKMH     float32            `bson:"speedOffsetKMH,omitempty"`
+	PlanDistanceKM     float32            `bson:"planDistanceKM,omitempty"`
+	InstallTime        uint32             `bson:"installTime,omitempty"`
+	ResetTime          uint32             `bson:"resetTime,omitempty"`
+	ExpirationTime     uint32             `bson:"expirationTime,omitempty"`
+	DeviceCode         string             `bson:"deviceCode,omitempty"`
+	IconURL            string             `bson:"iconURL,omitempty"`
+	SerialNumber       string             `bson:"serialNumber"`
+	SimPhoneNumber     string             `bson:"simPhoneNumber"`
+	SimID              string             `bson:"simID,omitempty"`
+	ImeiNumber         string             `bson:"imeiNumber,omitempty"`
+	RouteColor         string             `bson:"routeColor,omitempty"`
+	IgnitionIndex      uint8              `bson:"ignitionIndex,omitempty"`
+	CodeVersion        string             `bson:"codeVersion,omitempty"`
+	FeatureSet         string             `bson:"featureSet,omitempty"`
+	IPAddressValid     string             `bson:"ipAddressValid"`
+	FirstConnectTime   uint32             `bson:"firstConnectTime"`
+	LastRevGeocodeTime uint32             `bson:"lastReverseGeocodeTime,omitempty"`
+	CommandStateMask   uint32             `bson:"commandStateMask,omitempty"`
+	StatusCodeState    uint32             `bson:"statusCodeState"` //on\off state
+	OdometerOffsetKM   float32            `bson:"odometerOffsetKM,omitempty"`
+	LastStopTime       uint32             `bson:"lastStopTime,omitempty"`
+	LastStartTime      uint32             `bson:"lastStartTime,omitempty"`
+	RegistrationTime   uint32             `bson:"registrationTime"`
+	DeletedTime        uint32             `bson:"deletedTime"`
+	IsActive           bool               `bson:"isActive"`
+	DisplayName        string             `bson:"displayName"`
+	Notes              string             `bson:"notes,omitempty"`
+	LastUpdateTime     uint32             `bson:"lastUpdateTime"`
+	CreationTime       uint32             `bson:"creationTime"`
 }
 
 //LastInfo : informazioni su tutti i parametri last

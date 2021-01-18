@@ -4,6 +4,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 //Account : collezione account
 type Account struct {
+	ID               primitive.ObjectID  `bson:"_id, omitempty"`
 	AccountID        string              `bson:"accountID"`
 	AccountType      int8                `bson:"accountType"`
 	RetainedEventAge int64               `bson:"retainedEventAge,omitempty"`
@@ -63,6 +64,6 @@ type AccountInfo struct {
 //AccountRepository : funzioni da implementare che riguardano la collezione account
 type AccountRepository interface {
 	FindAccount(AccountID string) *Account
-	AddAccount(account *Account)
-	UpdateAccount(account *Account)
+	AddAccount(account *Account) interface{}
+	UpdateAccount(accoount *Account)
 }
