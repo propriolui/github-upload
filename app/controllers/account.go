@@ -44,7 +44,6 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		a.s.Panic(err)
 	}
-	a.s.Info(l)
 	//recupera l'account associato all'indirizzo mail
 	result := a.accRepo.FindAccount(l.AccountID)
 
@@ -55,14 +54,14 @@ func (a *Accounts) Login(w http.ResponseWriter, r *http.Request) {
 		a.s.Info(l.Password)
 		pwdRequest := []byte(l.Password)
 		pwd := []byte(result.Password)
-
 		// Comparing the password with the hash
 		err = bcrypt.CompareHashAndPassword(pwd, pwdRequest)
 		if err != nil {
 			w.Header().Add("password", "incorrect")
 		} else {
 			w.Header().Add("password", "correct")
-			token, err := middlewares.GenerateJWT(2)
+			id := result.ID.Hex()
+			token, err := middlewares.GenerateJWT(id)
 			if err != nil {
 				a.s.Panicf("Error generating JWT: ", err)
 			}
@@ -86,7 +85,6 @@ func (a *Accounts) GetAccount(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		a.s.Panic(err)
 	}
-	a.s.Info(l)
 	//recupera l'account associato all'indirizzo mail
 	result := a.accRepo.FindAccount(l.AccountID)
 	result.Password = ""

@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"propriolui/tracker_api/app/controllers"
 	"propriolui/tracker_api/app/db"
+	"propriolui/tracker_api/app/middlewares"
 	"propriolui/tracker_api/app/repositories"
 	"time"
 
@@ -77,9 +78,9 @@ func run() {
 
 	//routing
 	r.HandleFunc("/login", a.Login).Methods("POST")
-	r.HandleFunc("/account", a.GetAccount).Methods("GET")
+	r.HandleFunc("/account", middlewares.IsAuthorized(a.GetAccount)).Methods("GET")
 	r.HandleFunc("/account", a.CreateAccount).Methods("POST")
-	r.HandleFunc("/account", a.UpdateAccount).Methods("PUT")
+	r.HandleFunc("/account", middlewares.IsAuthorized(a.UpdateAccount)).Methods("PUT")
 
 	// spegnimento dolce server
 	c := make(chan os.Signal, 1)
