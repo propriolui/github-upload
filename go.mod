@@ -5,7 +5,6 @@ go 1.15
 require (
 	github.com/aws/aws-sdk-go v1.36.13 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/golang/gddo v0.0.0-20201215222538-41221c318e83
 	github.com/golang/snappy v0.0.2 // indirect
