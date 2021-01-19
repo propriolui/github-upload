@@ -5,7 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 //Geofence : collezione geofence
 type Geofence struct {
 	ID                  primitive.ObjectID `bson:"_id, omitempty"`
-	AccountID           string             `bson:"accountID"`
+	AccountID           primitive.ObjectID `bson:"accountID"`
 	GeofenceID          string             `bson:"geofenceID"`
 	MinLatitude         float64            `bson:"minLatitude"`
 	MaxLatitude         float64            `bson:"maxLatitude"`

@@ -5,7 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 //User : collezione user
 type User struct {
 	ID                primitive.ObjectID `bson:"_id, omitempty"`
-	AccountID         string             `bson:"accountID"`
+	AccountID         primitive.ObjectID `bson:"accountID"`
 	UserID            string             `bson:"userID"`
 	UserType          int8               `bson:"userType"`
 	RoleID            string             `bson:"roleID"`

@@ -6,7 +6,10 @@ import (
 	"propriolui/tracker_api/app/middlewares"
 	"propriolui/tracker_api/app/models"
 	"strconv"
+	"strings"
 
+	"github.com/dgrijalva/jwt-go"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 
 	"go.uber.org/zap"
@@ -89,6 +92,41 @@ func (a *Accounts) GetAccount(w http.ResponseWriter, r *http.Request) {
 	result := a.accRepo.FindAccount(l.AccountID)
 	result.Password = ""
 	if result.AccountID == "" {
+		http.Error(w, "account not exist", http.StatusNotFound)
+	} else {
+		json.NewEncoder(w).Encode(result)
+	}
+}
+
+//GetAccountByToken : permette di recuperare informazioni dell'account tramite il token
+func (a *Accounts) GetAccountByToken(w http.ResponseWriter, r *http.Request) {
+	msg := "Content-Type header is not application/json"
+	err := middlewares.ValContentType(r)
+	if err != nil {
+		http.Error(w, msg, http.StatusBadRequest)
+		return
+	}
+	//legge il body, successivamente lo converte e lo passa al repo
+	bearerToken := r.Header.Get("Authorization")
+	strArr := strings.Split(bearerToken, " ")
+	var tokenString string
+	if len(strArr) == 2 {
+		tokenString = strArr[1]
+	}
+	claims := jwt.MapClaims{}
+	jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return nil, nil
+	})
+	idString := claims["user_id"].(string)
+	id, err := primitive.ObjectIDFromHex(idString)
+	if err != nil {
+		a.s.Error(err)
+	}
+
+	//recupera l'account associato all'id del token
+	result := a.accRepo.FindAccountByID(id)
+	result.Password = ""
+	if result.ID == primitive.NilObjectID {
 		http.Error(w, "account not exist", http.StatusNotFound)
 	} else {
 		json.NewEncoder(w).Encode(result)

@@ -63,7 +63,8 @@ type AccountInfo struct {
 
 //AccountRepository : funzioni da implementare che riguardano la collezione account
 type AccountRepository interface {
+	FindAccountByID(ID primitive.ObjectID) *Account
 	FindAccount(AccountID string) *Account
 	AddAccount(account *Account) interface{}
-	UpdateAccount(accoount *Account)
+	UpdateAccount(account *Account)
 }

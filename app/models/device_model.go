@@ -5,7 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 //Device : collezione device
 type Device struct {
 	ID                 primitive.ObjectID `bson:"_id, omitempty"`
-	AccountID          string             `bson:"accountID"`
+	AccountID          primitive.ObjectID `bson:"accountID"`
 	DeviceID           string             `bson:"deviceID"`
 	GroupID            string             `bson:"groupID"`
 	EquipmentType      string             `bson:"equipmentType,omitempty"`
