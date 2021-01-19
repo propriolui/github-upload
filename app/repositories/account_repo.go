@@ -25,10 +25,11 @@ func NewAccountRepo(db *mongo.Client, s *zap.SugaredLogger) *AccountRepo {
 //FindAccount : ritorna un account in base all'accountID
 func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 	collection := acc.dba.Database("tracker_db").Collection("account")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	filter := bson.D{{"accountID", aID}}
 	result := &models.Account{}
 
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+	err := collection.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			acc.s.Infof("documento vuoto")
@@ -42,9 +43,10 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 //FindAccountByID : ritorna un account in base all'accountID
 func (acc *AccountRepo) FindAccountByID(ID primitive.ObjectID) *models.Account {
 	collection := acc.dba.Database("tracker_db").Collection("account")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	filter := bson.M{"_id": ID}
 	result := &models.Account{}
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+	err := collection.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			acc.s.Infof("documento vuoto")
@@ -55,8 +57,8 @@ func (acc *AccountRepo) FindAccountByID(ID primitive.ObjectID) *models.Account {
 	return result
 }
 
-//AddAccount : inserisce un account nel db
-func (acc *AccountRepo) AddAccount(account *models.Account) interface{} {
+//CreateAccount : inserisce un account nel db
+func (acc *AccountRepo) CreateAccount(account *models.Account) interface{} {
 	collection := acc.dba.Database("tracker_db").Collection("account")
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	account.CreationTime = primitive.Timestamp{}
@@ -68,7 +70,7 @@ func (acc *AccountRepo) AddAccount(account *models.Account) interface{} {
 	return insertResult.InsertedID
 }
 
-//UpdateAccount : ritorna un account in base all'accountID
+//UpdateAccount : modifica un account
 func (acc *AccountRepo) UpdateAccount(account *models.Account) {
 	collection := acc.dba.Database("tracker_db").Collection("account")
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)

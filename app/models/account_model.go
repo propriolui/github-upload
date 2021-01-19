@@ -65,6 +65,6 @@ type AccountInfo struct {
 type AccountRepository interface {
 	FindAccountByID(ID primitive.ObjectID) *Account
 	FindAccount(AccountID string) *Account
-	AddAccount(account *Account) interface{}
+	CreateAccount(account *Account) interface{}
 	UpdateAccount(account *Account)
 }

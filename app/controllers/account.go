@@ -229,7 +229,7 @@ func (a *Accounts) CreateAccount(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	a.accRepo.AddAccount(acc)
+	a.accRepo.CreateAccount(acc)
 }
 
 //UpdateAccount : api di modifica di un documento della tabella account
