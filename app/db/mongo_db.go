@@ -41,7 +41,7 @@ func (mdb *Mongodb) ConnectDB() (*mongo.Client, context.Context) {
 		mdb.s.Error(err)
 	}
 	//aspetta il collegamento del db per 10 secondi, in caso da' errore
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	err = clientDB.Connect(ctx)
 	if err != nil {
 		mdb.s.Error(err)

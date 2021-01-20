@@ -25,7 +25,8 @@ func NewDeviceRepo(db *mongo.Client, s *zap.SugaredLogger) *DeviceRepo {
 //CreateDevice : permette di creare un nuovo elemento nella tabella device
 func (dev *DeviceRepo) CreateDevice(device *models.Device) interface{} {
 	collection := dev.dba.Database("tracker_db").Collection("device")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	device.CreationTime = primitive.Timestamp{}
 	insertResult, err := collection.InsertOne(ctx, device)
 	if err != nil {
@@ -38,7 +39,8 @@ func (dev *DeviceRepo) CreateDevice(device *models.Device) interface{} {
 //UpdateDevice : modifica un device
 func (dev *DeviceRepo) UpdateDevice(device *models.Device) {
 	collection := dev.dba.Database("tracker_db").Collection("device")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	device.LastUpdateTime = primitive.Timestamp{}
 	result, err := collection.ReplaceOne(ctx, bson.M{"_id": device.ID}, device)
 	if err != nil {
@@ -50,9 +52,11 @@ func (dev *DeviceRepo) UpdateDevice(device *models.Device) {
 //FindDevice : ritorna un device in base all'ID
 func (dev *DeviceRepo) FindDevice(ID primitive.ObjectID) *models.Device {
 	collection := dev.dba.Database("tracker_db").Collection("device")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	filter := bson.M{"_id": ID}
 	result := &models.Device{}
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
+	err := collection.FindOne(ctx, filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			dev.s.Infof("documento vuoto")
@@ -63,11 +67,23 @@ func (dev *DeviceRepo) FindDevice(ID primitive.ObjectID) *models.Device {
 	return result
 }
 
-/*
 //FindAllAccountDevices : ritorna tutti i device di un determinato account
 func (dev *DeviceRepo) FindAllAccountDevices(accountID primitive.ObjectID) []models.Device {
 	collection := dev.dba.Database("tracker_db").Collection("device")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	var result []models.Device
-
-}*/
+	cursor, err := collection.Find(ctx, bson.M{"accountID": accountID})
+	if err != nil {
+		dev.s.DPanic(err)
+	}
+	defer cursor.Close(ctx)
+	i := 0
+	for cursor.Next(ctx) {
+		if err = cursor.Decode(&result[i]); err != nil {
+			dev.s.Fatal(err)
+		}
+		dev.s.Info(result[i])
+	}
+	return result
+}

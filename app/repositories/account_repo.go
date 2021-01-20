@@ -25,8 +25,9 @@ func NewAccountRepo(db *mongo.Client, s *zap.SugaredLogger) *AccountRepo {
 //FindAccount : ritorna un account in base all'accountID
 func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 	collection := acc.dba.Database("tracker_db").Collection("account")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	filter := bson.D{{"accountID", aID}}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	filter := bson.M{"accountID": aID}
 	result := &models.Account{}
 
 	err := collection.FindOne(ctx, filter).Decode(&result)
@@ -43,7 +44,8 @@ func (acc *AccountRepo) FindAccount(aID string) *models.Account {
 //FindAccountByID : ritorna un account in base all'accountID
 func (acc *AccountRepo) FindAccountByID(ID primitive.ObjectID) *models.Account {
 	collection := acc.dba.Database("tracker_db").Collection("account")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	filter := bson.M{"_id": ID}
 	result := &models.Account{}
 	err := collection.FindOne(ctx, filter).Decode(&result)
@@ -60,7 +62,8 @@ func (acc *AccountRepo) FindAccountByID(ID primitive.ObjectID) *models.Account {
 //CreateAccount : inserisce un account nel db
 func (acc *AccountRepo) CreateAccount(account *models.Account) interface{} {
 	collection := acc.dba.Database("tracker_db").Collection("account")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	account.CreationTime = primitive.Timestamp{}
 	insertResult, err := collection.InsertOne(ctx, account)
 	if err != nil {
@@ -73,7 +76,8 @@ func (acc *AccountRepo) CreateAccount(account *models.Account) interface{} {
 //UpdateAccount : modifica un account
 func (acc *AccountRepo) UpdateAccount(account *models.Account) {
 	collection := acc.dba.Database("tracker_db").Collection("account")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	account.LastUpdateTime = primitive.Timestamp{}
 	result, err := collection.ReplaceOne(ctx, bson.M{"accountID": account.AccountID}, account)
 	if err != nil {
